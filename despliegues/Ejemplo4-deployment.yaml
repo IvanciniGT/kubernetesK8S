@@ -1,0 +1,32 @@
+kind:           Deployment   
+apiVersion:     apps/v1         
+                
+metadata:
+    name:       deployment-nginx
+
+spec:
+    replicas: 3
+    
+    selector:
+        matchLabels:
+            app: nginx          #******************
+    
+    template:
+        metadata:
+            name:       template-pod-nginx
+            #namespace:   mi-servidor-web    No lo hacemos
+            labels:
+                app:    nginx   #******************
+        
+        spec:
+            containers:
+                - # Contenedor nginx
+                    name:   nginx
+                    image:  nginx:latest
+                    env:
+                        - name:     VARIable1
+                          value:    Valor1
+                        - name:     variable2
+                          value:    valor2
+                    ports:
+                        - containerPort: 80

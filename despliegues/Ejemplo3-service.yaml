@@ -1,0 +1,22 @@
+kind:           Service
+apiVersion:     v1          
+
+metadata:
+    name:       mi-web  # DNS
+    
+spec:
+    # Tipo de servicio
+    type: LoadBalancer # ClusterIP NodePort
+    
+    # Protocolo
+    # Puerto
+    ports:
+        - port: 81          # Puerto en IP del servicio
+          targetPort: 80    # Puerto en los contenedores
+          protocol: TCP
+          nodePort: 30080
+    
+    # Busca los pods de mi ns, que tengan 
+    # la etiqueta "app" con valor "nginx"
+    selector:
+        app: nginx

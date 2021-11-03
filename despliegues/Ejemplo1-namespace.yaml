@@ -1,0 +1,5 @@
+kind:           Namespace   # TIPO DE OBJETO QUE QUIERO CREAR
+apiVersion:     v1          # NOMBRE_LIBRERIA/VERSION       LA LIBRERIA QUE DEFINE ESE TIPO DE OBJETO
+
+metadata:
+    name:       mi-servidor-web

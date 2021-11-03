@@ -1,7 +1,7 @@
 #!/bin/bash
 
 sudo swapoff -a 
-sudo sed -i 's/\/swap/#\/swap/' /etc/fstab
+sudo sed -i 's/\/var\/swap/#\/var\/swap/' /etc/fstab
 
 SWAP_ACTUAL=$(free | grep Swap)
 if [[ "$SWAP_ACTUAL" =~ [1-9] ]]

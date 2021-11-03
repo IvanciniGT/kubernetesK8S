@@ -1,0 +1,16 @@
+kind:           Pod   
+apiVersion:     v1         
+
+metadata:
+    name:       pod-nginx
+    #namespace:   mi-servidor-web    No lo hacemos
+    labels:
+        app: nginx
+
+spec:
+    containers:
+        - # Contenedor nginx
+            name:   nginx
+            image:  nginx:latest
+            ports:
+                - containerPort: 80

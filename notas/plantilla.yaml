@@ -1,0 +1,65 @@
+# Comentarios
+---
+NODO ESCALARES: Son valores simples
+---
+# Valor nulo
+~
+---
+# Numero
+12
+---
+-34.98
+---
+# Logicos
+true # TRUE True         yes   on      y
+---
+false  # False FALSE     no    n       off
+---
+# Textos
+Hola, soy un texto
+---
+"Hola, soy un texto"
+---
+'Hola, soy un texto'
+---
+NODOS DE COLECCION
+---
+listas
+---
+- NODO1
+- NODO2
+- NODO3
+---
+mapas: Conjunto clave valor. 
+#Lista donde cada NODO tiene otro NODO identificandolo
+---
+clave1: NODO1
+clave2: NODO2
+clave3: NODO3
+---
+# Literal
+|+
+    Hola soy un \ texto
+     que #ocupa " varias lineas
+
+
+
+
+---
+#Folded
+>+
+    Hola soy un \ texto
+     que #ocupa " varias lineas
+
+
+
+
+
+
+
+
+
+
+
+
+

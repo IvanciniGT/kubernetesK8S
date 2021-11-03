@@ -1,0 +1,115 @@
+kind:           Namespace   
+apiVersion:     v1          
+
+metadata:
+    name:       wp
+    
+---
+kind:           Service
+apiVersion:     v1          
+
+metadata:
+    name:       wp  
+    
+spec:
+    type: NodePort
+    ports:
+        - port: 80          # Puerto en IP del servicio
+          targetPort: 80    # Puerto en los contenedores
+          #protocol: TCP
+          nodePort: 30080
+    
+    selector:
+        app: wordpress
+        
+---
+kind:           Service
+apiVersion:     v1          
+
+metadata:
+    name:       db  
+    
+spec:
+    type: ClusterIP
+    ports:
+        - port: 3306         
+          targetPort: 3306   
+
+    selector:
+        app: mysql
+        
+---
+kind:           Deployment   
+apiVersion:     apps/v1         
+                
+metadata:
+    name:       wordpress
+
+spec:
+    replicas: 1
+    
+    selector:
+        matchLabels:
+            app: wordpress          #******************
+    
+    template:
+        metadata:
+            name:       template-wordpress
+            #namespace:   mi-servidor-web    No lo hacemos
+            labels:
+                app:    wordpress   #******************
+        
+        spec:
+            containers:
+                - # Contenedor nginx
+                    name:   wordpress
+                    image:  wordpress:latest
+                    env:
+                        - name: WORDPRESS_DB_HOST
+                          value: db
+                        - name: WORDPRESS_DB_USER
+                          value: usuario
+                        - name: WORDPRESS_DB_PASSWORD
+                          value: password
+                        - name: WORDPRESS_DB_NAME
+                          value: miweb
+                    ports:
+                        - containerPort: 80
+                        
+---
+kind:           Deployment   
+apiVersion:     apps/v1         
+                
+metadata:
+    name:       mysql
+
+spec:
+    replicas: 1
+    
+    selector:
+        matchLabels:
+            app: mysql          #******************
+    
+    template:
+        metadata:
+            name:       template-mysql
+            #namespace:   mi-servidor-web    No lo hacemos
+            labels:
+                app:    mysql   #******************
+        
+        spec:
+            containers:
+                - # Contenedor nginx
+                    name:   mysql
+                    image:  mysql:5.7
+                    env:
+                        - name: MYSQL_RANDOM_ROOT_PASSWORD
+                          value: "1"
+                        - name: MYSQL_USER
+                          value: usuario
+                        - name: MYSQL_PASSWORD
+                          value: password
+                        - name: MYSQL_DATABASE
+                          value: miweb
+                    ports:
+                        - containerPort: 3306
