@@ -13,7 +13,13 @@ spec:
     storageClassName: rapidito-redundante
     accessModes:
         - ReadWriteOnce
+
+
+
+
+
 ---
+
 kind:           PersistentVolumeClaim
 apiVersion:     v1          
 
@@ -28,6 +34,9 @@ spec:
     storageClassName: rapidito-redundante
     accessModes:
         - ReadWriteOnce
+        
+        
+        
 ---
 kind:           Service
 apiVersion:     v1          
@@ -46,6 +55,11 @@ spec:
     selector:
         app: wordpress
         
+        
+        
+        
+        
+        
 ---
 kind:           Service
 apiVersion:     v1          
@@ -61,6 +75,10 @@ spec:
 
     selector:
         app: mysql
+        
+        
+        
+        
         
 ---
 kind:           Deployment   
@@ -118,6 +136,12 @@ spec:
                         - containerPort: 80
                         
 ---
+
+
+
+
+
+
 kind:           Deployment   
 apiVersion:     apps/v1         
                 

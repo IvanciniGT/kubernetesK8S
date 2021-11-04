@@ -3,6 +3,9 @@ apiVersion:     v1
 
 metadata:
     name:       wp-prod
+
+
+
 ---
 kind:           ConfigMap   
 apiVersion:     v1          
@@ -16,6 +19,9 @@ data:
     MYSQL_RANDOM_ROOT_PASSWORD: "1"
     MYSQL_USER: usuarioprod
     MYSQL_DATABASE: miweb
+
+
+
 ---
 kind:           Secret   
 apiVersion:     v1          
@@ -26,6 +32,9 @@ metadata:
     
 data:   # Los valores van en base64
     password: cGFzc3dvcmQ=
+
+
+
 ---
 kind:           PersistentVolume
 apiVersion:     v1          
@@ -44,6 +53,9 @@ spec:
     hostPath:    # PARA JUGAR
         path: /home/ubuntu/environment/datos/wp1
         type: DirectoryOrCreate 
+        
+        
+        
 ---
 kind:           PersistentVolume
 apiVersion:     v1          

@@ -182,3 +182,20 @@ Nodo 4
     cliente nfs
 
 ResourceQuota <<<< 
+
+---------
+Si yo tuviera un cluster con 50 maquinas.... las quiero iguales?
+Posiblemente no.
+    wordpress    <<<< Hardware    -    10 raspi
+                                        Rack GPUs - DeepLearning
+                                        
+
+Cluster                                        
+Nodo 1 |   Weblogic
+Nodo 2 |   Weblogic
+Nodo 3 |   Weblogic
+Nodo 4 |   Weblogic
+
+Otros 27 nodos
+
+    
