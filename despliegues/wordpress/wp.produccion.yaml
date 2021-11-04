@@ -22,6 +22,43 @@ apiVersion:     v1
 
 metadata:
     name:       secretos
+    namespace:  wp-prod
     
 data:   # Los valores van en base64
-    password: dW4gcGFzc3dvcmQgc3VwZXIgc2VjcmV0bw==
+    password: cGFzc3dvcmQ=
+---
+kind:           PersistentVolume
+apiVersion:     v1          
+
+metadata:
+    name:       volumen-wp-1
+    
+spec:
+    capacity: 
+        storage: 20Gi 
+    storageClassName: rapidito-redundante
+    accessModes:
+        - ReadWriteOnce
+        - ReadWriteMany
+        - ReadOnlyMany
+    hostPath:    # PARA JUGAR
+        path: /home/ubuntu/environment/datos/wp1
+        type: DirectoryOrCreate 
+---
+kind:           PersistentVolume
+apiVersion:     v1          
+
+metadata:
+    name:       volumen-wp-2
+    
+spec:
+    capacity: 
+        storage: 20Gi 
+    storageClassName: rapidito-redundante
+    accessModes:
+        - ReadWriteOnce
+        - ReadWriteMany
+        - ReadOnlyMany
+    hostPath:    # PARA JUGAR
+        path: /home/ubuntu/environment/datos/wp2
+        type: DirectoryOrCreate 
