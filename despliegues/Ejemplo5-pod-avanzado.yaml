@@ -1,0 +1,83 @@
+kind:           Pod   
+apiVersion:     v1         
+
+metadata:
+    name:       pod-avanzado
+    labels:
+        app: nginx
+
+spec:
+    volumes:
+        - name: compartido
+          emptyDir: 
+            medium: Memory
+        - name: configuracion
+          configMap: 
+            name: archivos-configuracion
+        - name: carpeta-host
+          hostPath: 
+            path: /home/ubuntu/environment/datos/pod
+            type: DirectoryOrCreate # Directory File FileOrCreate Socket
+        - name: datos-persistentes
+          persistentVolumeClaim:
+            claimName: peticion-volumen-fedora
+          
+          #tipo: 
+          #  configuracion1: valor
+          #  configuracion2: valor
+          
+          #tipo: {"configuracion1": "valor", "configuracion2": "valor"}
+          #tipo: {}
+    containers:
+        - # Contenedor nginx
+            name:   nginx
+            image:  nginx:latest
+            ports:
+                - containerPort: 80
+        - # Contenedor fedora
+            name:   fedora
+            image:  fedora:latest
+            volumeMounts:
+                - name: datos-persistentes
+                  mountPath: /datos
+                - name: compartido
+                  mountPath: /compartido
+                - name: configuracion
+                  mountPath: /conf
+                - name: carpeta-host
+                  mountPath: /persistente
+            command:
+                - sh
+                - -c 
+                - sleep 3600
+            env:
+               - name:  VAR1
+                 valueFrom: 
+                    configMapKeyRef:
+                        name: configuracion
+                        key:  dato1
+               - name:  VAR2
+                 valueFrom: 
+                    configMapKeyRef:
+                        name: configuracion
+                        key:  dato2
+               - name:  VAR_SECRETA
+                 valueFrom: 
+                    secretKeyRef:
+                        name: secretos
+                        key:  password
+        - # Contenedor ubuntu
+            name:   ubuntu
+            image:  ubuntu:latest
+            volumeMounts:
+                - name: compartido
+                  mountPath: /shared
+                - name: configuracion
+                  mountPath: /conf
+            command:
+                - sh
+                - -c 
+                - sleep 3600
+            envFrom:
+               - configMapRef:
+                    name: configuracion

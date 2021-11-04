@@ -1,0 +1,16 @@
+kind:           PersistentVolumeClaim
+apiVersion:     v1          
+
+metadata:
+    name:       peticion-volumen-fedora
+    
+spec:
+    resources:
+        requests:
+            storage: 10Gi # Tamaño que necesito
+    # Tipo
+    storageClassName: rapidito-redundante
+    accessModes:
+        - ReadWriteOnce
+#        - ReadWriteMany
+#        - ReadOnceMany

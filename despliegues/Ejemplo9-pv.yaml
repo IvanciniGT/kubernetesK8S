@@ -1,0 +1,21 @@
+kind:           PersistentVolume
+apiVersion:     v1          
+
+metadata:
+    name:       volumen-fedora
+    
+spec:
+    # Morralla... Información descriptiva
+    capacity: 
+        storage: 20Gi 
+    storageClassName: rapidito-redundante
+    accessModes:
+        - ReadWriteOnce
+        - ReadWriteMany
+        - ReadOnlyMany
+    
+    # Donde esta esto físicamente
+    # Tipo de volumen
+    hostPath:    # PARA JUGAR
+        path: /home/ubuntu/environment/datos/persistente
+        type: DirectoryOrCreate 

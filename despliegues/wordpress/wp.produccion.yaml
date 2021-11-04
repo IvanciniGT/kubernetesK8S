@@ -1,0 +1,27 @@
+kind:           Namespace   
+apiVersion:     v1          
+
+metadata:
+    name:       wp-prod
+---
+kind:           ConfigMap   
+apiVersion:     v1          
+
+metadata:
+    name:       configuracion
+    namespace:  wp-prod
+
+    
+data:
+    MYSQL_RANDOM_ROOT_PASSWORD: "1"
+    MYSQL_USER: usuarioprod
+    MYSQL_DATABASE: miweb
+---
+kind:           Secret   
+apiVersion:     v1          
+
+metadata:
+    name:       secretos
+    
+data:   # Los valores van en base64
+    password: dW4gcGFzc3dvcmQgc3VwZXIgc2VjcmV0bw==

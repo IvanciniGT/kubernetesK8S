@@ -1,0 +1,28 @@
+kind:           ConfigMap   
+apiVersion:     v1          
+
+metadata:
+    name:       configuracion
+    
+data:
+    dato1: valor1
+    dato2: valor2
+---
+kind:           ConfigMap   
+apiVersion:     v1          
+
+metadata:
+    name:       archivos-configuracion
+    
+data:
+    httpd.conf: |
+        <server>
+            <listenaddress>localhost:80</listenaddress>
+        </server>
+    mysql.properties: |
+        # Este parametro es muy importante no tocar
+        COLLATE=UTF-8
+        Otra propiedad=OTRO VALOR
+        # Descomentar para pruebas
+        #OTRO_PARAMETRO= OTRO VALOR MAS
+        
