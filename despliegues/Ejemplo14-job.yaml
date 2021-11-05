@@ -1,0 +1,34 @@
+kind:           CronJob
+apiVersion:     batch/v1
+
+
+kind:           Job
+apiVersion:     batch/v1
+
+metadata:
+    name:       actualizador-web
+
+spec:
+    template:
+        spec:
+            #pvc   petion-volumen-de-mi-web
+            containers:
+                -   name:               cargador-web
+                    image:              ubuntu:latest
+                    command:
+                                        - sh
+                                        - -c 
+                                        - /scripts/recargador.sh
+                    env:
+                        - name:         REPO_URL
+                          valueFrom:
+                            configMapKeyRef:
+                                name:   web
+                                key:    URL
+                    volumeMounts:
+                        - name:         scripts
+                          mountPath:    /scripts
+                        - name:         volumen-web
+                          mountPath:    /misitioWeb
+                  
+# JOB que recargue la web

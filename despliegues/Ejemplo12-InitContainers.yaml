@@ -68,7 +68,8 @@ spec:
                     configMap:
                         name:           configuracion-nginx
                 -   name:               volumen-web
-                    emptyDir:           {}
+                    #emptyDir:           {}
+                    #pvc   petion-volumen-de-mi-web
             initContainers:
                 -   name:               cargador-web
                     image:              ubuntu:latest
