@@ -1,25 +1,103 @@
-kind:           Deployment   
-apiVersion:     apps/v1         
+kind:           ConfigMap
+apiVersion:     v1         
 metadata:
-    name:       deployment-nginx
+    name:       web
+data:
+    URL:        https://github.com/IvanciniGT/webEjemploAnsible
+---
+kind:           ConfigMap
+apiVersion:     v1         
+metadata:
+    name:       configuracion-nginx
+data:
+    default.conf: |
+        server {
+            listen       80;
+            listen  [::]:80;
+            server_name  localhost;
+        
+            #access_log  /var/log/nginx/host.access.log  main;
+        
+            location / {
+                root   /miweb;
+                index  index.html index.htm;
+            }
+            
+            error_page   500 502 503 504  /50x.html;
+            location = /50x.html {
+                root   /miweb;
+            }
+        
+        }
+    
+---
+kind:           ConfigMap
+apiVersion:     v1         
+metadata:
+    name:       scripts
+
+data:
+    cargador.sh: |
+        #!/bin/bash
+    
+        apt-get update && apt-get install git -y
+        git clone $REPO_URL /misitioWeb
+---
+kind:                                   Deployment   
+apiVersion:                             apps/v1         
+metadata:
+    name:                               deployment-nginx
 
 spec:
     replicas: 1
     selector:
         matchLabels:
-            app: nginx          
+            app:                        nginx          
     template:
         metadata:
-            name:       template-pod-nginx
+            name:                       template-pod-nginx
             labels:
-                app:    nginx   
+                app:                    nginx   
         spec:
+            volumes:
+                -   name:               scripts
+                    configMap:
+                        name:           scripts
+                        defaultMode:    0777
+                -   name:               configuracion-nginx
+                    configMap:
+                        name:           configuracion-nginx
+                -   name:               volumen-web
+                    emptyDir:           {}
+            initContainers:
+                -   name:               cargador-web
+                    image:              ubuntu:latest
+                    command:
+                                        - sh
+                                        - -c 
+                                        - /scripts/cargador.sh
+                    env:
+                        - name:         REPO_URL
+                          valueFrom:
+                            configMapKeyRef:
+                                name:   web
+                                key:    URL
+                    volumeMounts:
+                        - name:         scripts
+                          mountPath:    /scripts
+                        - name:         volumen-web
+                          mountPath:    /misitioWeb
             containers:
                 - # Contenedor nginx
-                    name:   nginx
-                    image:  nginx:latest
+                    name:               nginx
+                    image:              nginx:latest
                     ports:
                         - containerPort: 80
+                    volumeMounts:
+                        - name:         volumen-web
+                          mountPath:    /miweb
+                        - name:         configuracion-nginx
+                          mnountPath:   /etc/nginx/conf.d
 ---
 kind:           Service
 apiVersion:     v1          

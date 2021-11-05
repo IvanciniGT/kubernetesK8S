@@ -271,4 +271,10 @@ Pod
         rellenar el volumen
     nginx
         leer el volumen que dentro tiene la app ya recien descargada
-        
+
+
+
+Contenedor - Ubuntu
+
+apt-get update && apt-get install git -y
+git clone https://github.com/IvanciniGT/webEjemploAnsible /misitioWeb
