@@ -1,0 +1,92 @@
+kind:           Pod   
+apiVersion:     v1         
+
+metadata:
+    name:       pod-nginx
+    labels:
+        app: nginx
+
+spec:
+    containers:
+        - # Contenedor nginx
+            name:   nginx
+            image:  nginx:latest
+            ports:
+                - containerPort: 80
+    # Reglas de afinidad
+    
+    # RUINA GRANDE !!!!! Que pasa si se cae el nodo? Jodido voy      A EVITAR !!!!!
+    nodeName: ip-172-31-11-35
+    
+    nodeSelector: # Esta guay... es sencillo de menejar ... pero solo para casos sencillos de uso
+        # Pero aquí no trabajamos con el nombre de una máquina (nodo)
+        # Trabajamos con LABELS (Etiquetas)    <<<< Desarrollo / Despliegues
+        #disco:      ssd
+        kubernetes.io/hostname: ip-172-31-11-35
+        kubernetes.io/arch: amd64
+        #nfs-client: true
+        #memoria:    grandota
+        #cpus:       potentisisimas
+        
+        # Lo ejecuta un administrador: kubectl label node ip-172-31-11-35 disco=ssd
+        # Nodos:  GPU: true
+        #         GPU: false
+        
+        #TAINTS <<< Administradores
+    
+    affinity: # ESTA ES LA REOSTIA !!!!!! Pero es dura ! de narices !
+        nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution: 
+                # Las reglas que pongo aquí son obligatorias
+                nodeSelectorTerms:  # Etiquetas / Labels
+                    - matchExpressions:
+                        - key: kubernetes.io/arch
+                          operator: In   # NotIn   Exists   DoesNotExists   Gt   Lt 
+                          values:
+                            - amd64
+                
+            preferredDuringSchedulingIgnoredDuringExecution: 
+                # Las reglas que pongo aquí suman puntos
+                - weight:  10  # Etiquetas / Labels
+                  preference:
+                    matchExpressions:
+                        - key: kubernetes.io/arch
+                          operator: In   # NotIn   Exists   DoesNotExists   Gt   Lt 
+                          values:
+                            - amd64
+        podAffinity:
+            # Regla 1
+            requiredDuringSchedulingIgnoredDuringExecution: 
+                # Las reglas que pongo aquí son obligatorias
+                - labelSelector:  # Etiquetas / Labels
+                    matchExpressions:
+                        - key: app
+                          operator: NotIn   # NotIn   Exists   DoesNotExists   Gt   Lt 
+                          values:
+                            - nginx
+                            - httpd
+                  topologyKey: zona
+# Busca un nodo para el que en el conjunto de nodos de la misma zona exista
+# algun pods sin la etiqueta app valiendo (nginx o httpd)
+            preferredDuringSchedulingIgnoredDuringExecution: 
+                # Las reglas que pongo aquí suman puntos
+        podAntiAffinity:
+            # Regla 2
+            requiredDuringSchedulingIgnoredDuringExecution: 
+                # Las reglas que pongo aquí son obligatorias
+                - labelSelector:  # Etiquetas / Labels
+                    matchExpressions:
+                        - key: app
+                          operator: In   # NotIn   Exists   DoesNotExists   Gt   Lt 
+                          values:
+                            - nginx
+                            - httpd
+                  topologyKey: zona
+# Huye de los nodos para los que en la misma zona existan nodos
+# que tengan un pods con la etiqueta app valiendo (nginx o httpd)
+            preferredDuringSchedulingIgnoredDuringExecution: 
+                # Las reglas que pongo aquí suman puntos
+
+
+
+

@@ -30,3 +30,6 @@ spec:
                           value:    valor2
                     ports:
                         - containerPort: 80
+                    resources:
+                        requests:
+                            cpu:   50m
