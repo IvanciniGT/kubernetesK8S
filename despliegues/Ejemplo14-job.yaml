@@ -17,33 +17,36 @@ kind:           Job
 apiVersion:     batch/v1
 
 
-kind:           Job
+kind:           CronJob
 apiVersion:     batch/v1
 
 metadata:
     name:       actualizador-web
 
 spec:
-    template:
+    schedule: "2 * * * *"
+    jobTemplate:
         spec:
-            restartPolicy:              Never
-            volumes:
-                -   name:               scripts
-                    configMap:
-                        name:           script-recarga
-                        defaultMode:    0777
-                -   name:               volumen-web
-                    persistentVolumeClaim:
-                        claimName:      peticion-volumen-mi-web
-            containers:
-                -   name:               cargador-web
-                    image:              ubuntu:latest
-                    command:
-                                        - sh
-                                        - -c 
-                                        - /scripts/recargador.sh
-                    volumeMounts:
-                        - name:         scripts
-                          mountPath:    /scripts
-                        - name:         volumen-web
-                          mountPath:    /misitioWeb
+            template:
+                spec:
+                    restartPolicy:              Never
+                    volumes:
+                        -   name:               scripts
+                            configMap:
+                                name:           script-recarga
+                                defaultMode:    0777
+                        -   name:               volumen-web
+                            persistentVolumeClaim:
+                                claimName:      peticion-volumen-mi-web
+                    containers:
+                        -   name:               cargador-web
+                            image:              ubuntu:latest
+                            command:
+                                                - sh
+                                                - -c 
+                                                - /scripts/recargador.sh
+                            volumeMounts:
+                                - name:         scripts
+                                  mountPath:    /scripts
+                                - name:         volumen-web
+                                  mountPath:    /misitioWeb

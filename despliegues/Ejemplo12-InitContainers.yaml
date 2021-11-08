@@ -96,6 +96,7 @@ spec:
             name:                       template-pod-nginx
             labels:
                 app:                    nginx   
+                autor:                  ivan
         spec:
             volumes:
                 -   name:               scripts
