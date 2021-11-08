@@ -1,8 +1,19 @@
+# kubectl apply -f Ejemplo12... -n ivan
+# El deployment que tenemos aqui se instale (los pods- replicas= 2)
+# Solamente en maquinas de tipo=servidor-web
+# Cada pod en una maquina diferente (autor)
+---
+kind:           Namespace
+apiVersion:     v1          
+
+metadata:
+    name:       ivan
+---
 kind:           PersistentVolume
 apiVersion:     v1          
 
 metadata:
-    name:       volumen-mi-web
+    name:       volumen-mi-web-ivan
     
 spec:
     # Morralla... Información descriptiva
@@ -17,7 +28,7 @@ spec:
     # Donde esta esto físicamente
     # Tipo de volumen
     hostPath:    # PARA JUGAR
-        path: /home/ubuntu/environment/datos/miweb
+        path: /home/ubuntu/environment/datos/ivan
         type: DirectoryOrCreate 
 ---
 kind:           PersistentVolumeClaim
@@ -98,6 +109,26 @@ spec:
                 app:                    nginx   
                 autor:                  ivan
         spec:
+        
+        
+            affinity: 
+                nodeAffinity:
+                    requiredDuringSchedulingIgnoredDuringExecution: 
+                        nodeSelectorTerms: 
+                            - matchExpressions:
+                                - key: tipo
+                                  operator: In   
+                                  values:
+                                    - servidor-web
+                podAntiAffinity:
+                    requiredDuringSchedulingIgnoredDuringExecution: 
+                        - labelSelector:  
+                            matchExpressions:
+                                - key: autor
+                                  operator: In
+                                  values:
+                                    - ivan
+                          topologyKey: kubernetes.io/hostname
             volumes:
                 -   name:               scripts
                     configMap:
@@ -152,6 +183,6 @@ spec:
         - port: 80
           targetPort: 80
           protocol: TCP
-          nodePort: 30080
+          #nodePort: 30080
     selector:
         app: nginx

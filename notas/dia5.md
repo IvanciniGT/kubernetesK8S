@@ -44,3 +44,26 @@ Despliegue de nginx (ejemplo 12)
 Despliegue 2 replicas: Se tiene que situar en nodos de tipo servidor-web, pero cada replica en un nodo
 
 
+Bernet ---         tipo:servidor-web
+Cristian ----      tipo:servidor-web
+David ***
+Emilio ----   VOLUNTARIO - MASTER         <<<<<
+--------------------------
+Eugeniu ----       tipo:servidor-web
+Isaac  -----       tipo:servidor-web
+Oscar ***
+Sergio ----        tipo:servidor-web
+Xavi   ----    VOLUNTARIO - MASTER        <<<<<
+
+sudo kubeadm reset
+
+
+kubectl ---> api-server - En el plano de control de kubernetes
+Con cual? Donde está? 
+    En los maestros. Emilio, Xavi
+
+Contra qué apiserver estais conectando al ejecutar kubectl?
+    Con el que se indica en el fichero ~/.kube/config
+
+Cada nodo :
+    kubelet -> docker
