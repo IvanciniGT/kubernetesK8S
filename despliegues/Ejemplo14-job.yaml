@@ -1,4 +1,19 @@
-kind:           CronJob
+
+---
+kind:           ConfigMap
+apiVersion:     v1         
+metadata:
+    name:       script-recarga
+
+data:
+    recargador.sh: |
+        #!/bin/bash
+    
+        apt-get update && apt-get install git -y
+        cd /misitioWeb
+        git pull
+---
+kind:           Job
 apiVersion:     batch/v1
 
 
@@ -11,7 +26,15 @@ metadata:
 spec:
     template:
         spec:
-            #pvc   petion-volumen-de-mi-web
+            restartPolicy:              Never
+            volumes:
+                -   name:               scripts
+                    configMap:
+                        name:           script-recarga
+                        defaultMode:    0777
+                -   name:               volumen-web
+                    persistentVolumeClaim:
+                        claimName:      peticion-volumen-mi-web
             containers:
                 -   name:               cargador-web
                     image:              ubuntu:latest
@@ -19,16 +42,8 @@ spec:
                                         - sh
                                         - -c 
                                         - /scripts/recargador.sh
-                    env:
-                        - name:         REPO_URL
-                          valueFrom:
-                            configMapKeyRef:
-                                name:   web
-                                key:    URL
                     volumeMounts:
                         - name:         scripts
                           mountPath:    /scripts
                         - name:         volumen-web
                           mountPath:    /misitioWeb
-                  
-# JOB que recargue la web
