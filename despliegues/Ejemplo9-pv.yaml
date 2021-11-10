@@ -13,6 +13,7 @@ spec:
         - ReadWriteOnce
         - ReadWriteMany
         - ReadOnlyMany
+    persistentVolumeReclaimPolicy: Delete   # Retain
     
     # Donde esta esto físicamente
     # Tipo de volumen

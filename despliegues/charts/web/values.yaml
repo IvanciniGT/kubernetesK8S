@@ -1,0 +1,37 @@
+web: 
+    repository: https://github.com/IvanciniGT/webEjemploAnsible
+    
+volume:
+    storageClass: cluster-nfs-ivan
+    capacity: 10Gi
+
+service:
+    type: NodePort
+    port: 80
+    nodePort: ~
+
+nginx:
+    image: nginx
+    version: latest
+    replicas: 3
+    antiaffinityLabel: ivan
+    nodeLabel: servidor-web
+    configuracion: |
+        server {
+            listen       80;
+            listen  [::]:80;
+            server_name  localhost;
+        
+            #access_log  /var/log/nginx/host.access.log  main;
+        
+            location / {
+                root   /miweb;
+                index  index.html index.htm;
+            }
+            
+            error_page   500 502 503 504  /50x.html;
+            location = /50x.html {
+                root   /miweb;
+            }
+        
+        }

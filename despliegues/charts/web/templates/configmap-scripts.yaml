@@ -1,0 +1,12 @@
+kind:           ConfigMap
+apiVersion:     v1         
+metadata:
+    name:       scripts
+
+data:
+    cargador.sh: |
+        #!/bin/bash
+        if [[ ! -f /misitioWeb/index.html ]]; then 
+            apt-get update && apt-get install git -y
+            git clone $REPO_URL /misitioWeb
+        fi

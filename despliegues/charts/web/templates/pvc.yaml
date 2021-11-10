@@ -1,0 +1,14 @@
+kind:           PersistentVolumeClaim
+apiVersion:     v1          
+
+metadata:
+    name:       peticion-volumen-mi-web
+    
+spec:
+    resources:
+        requests:
+            storage: {{ .Values.volume.capacity }}
+    # Tipo
+    storageClassName: {{ .Values.volume.storageClass }}
+    accessModes:
+        - ReadWriteOnce

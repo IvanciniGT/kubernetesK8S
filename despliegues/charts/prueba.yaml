@@ -1,59 +1,5 @@
-# kubectl apply -f Ejemplo12... -n ivan
-# El deployment que tenemos aqui se instale (los pods- replicas= 2)
-# Solamente en maquinas de tipo=servidor-web
-# Cada pod en una maquina diferente (autor)
 ---
-kind:           Namespace
-apiVersion:     v1          
-
-metadata:
-    name:       ivan
----
-#kind:           PersistentVolume
-#apiVersion:     v1          
-
-#metadata:
-#    name:       volumen-mi-web-ivan
-    
-#spec:
-    # Morralla... Información descriptiva
-#    capacity: 
-#        storage: 20Gi 
-#    storageClassName: rapidito-redundante
-#    accessModes:
-#        - ReadWriteOnce
-#        - ReadWriteMany
-#        - ReadOnlyMany
-    
-    # Donde esta esto físicamente
-    # Tipo de volumen
-    #hostPath:    # PARA JUGAR
-    #    path: /home/ubuntu/environment/datos/ivan
-    #    type: DirectoryOrCreate 
----
-kind:           PersistentVolumeClaim
-apiVersion:     v1          
-
-metadata:
-    name:       peticion-volumen-mi-web
-    
-spec:
-    resources:
-        requests:
-            storage: 10Gi # Tamaño que necesito
-    # Tipo
-    storageClassName: cluster-nfs-ivan
-    accessModes:
-        - ReadWriteOnce
-        
----
-kind:           ConfigMap
-apiVersion:     v1         
-metadata:
-    name:       web
-data:
-    URL:        https://github.com/IvanciniGT/webEjemploAnsible
----
+# Source: web/templates/configmap-nginx.yaml
 kind:           ConfigMap
 apiVersion:     v1         
 metadata:
@@ -78,8 +24,8 @@ data:
             }
         
         }
-    
 ---
+# Source: web/templates/configmap-scripts.yaml
 kind:           ConfigMap
 apiVersion:     v1         
 metadata:
@@ -93,6 +39,47 @@ data:
             git clone $REPO_URL /misitioWeb
         fi
 ---
+# Source: web/templates/configmap-web.yaml
+kind:           ConfigMap
+apiVersion:     v1         
+metadata:
+    name:       web
+data:
+    URL:        https://github.com/IvanciniGT/webEjemploAnsible
+---
+# Source: web/templates/pvc.yaml
+kind:           PersistentVolumeClaim
+apiVersion:     v1          
+
+metadata:
+    name:       peticion-volumen-mi-web
+    
+spec:
+    resources:
+        requests:
+            storage: 10Gi
+    # Tipo
+    storageClassName: cluster-nfs-ivan
+    accessModes:
+        - ReadWriteOnce
+---
+# Source: web/templates/service.yaml
+kind:           Service
+apiVersion:     v1          
+
+metadata:
+    name:       nginx 
+    
+spec:
+    type: NodePort 
+    ports:
+        - port: 80
+          targetPort: 80
+          protocol: TCP
+    selector:
+        app: nginx
+---
+# Source: web/templates/deployment.yaml
 kind:                                   Deployment   
 apiVersion:                             apps/v1         
 metadata:
@@ -171,19 +158,3 @@ spec:
                           mountPath:    /miweb
                         - name:         configuracion-nginx
                           mountPath:   /etc/nginx/conf.d
----
-kind:           Service
-apiVersion:     v1          
-
-metadata:
-    name:       nginx 
-    
-spec:
-    type: NodePort 
-    ports:
-        - port: 80
-          targetPort: 80
-          protocol: TCP
-          #nodePort: 30080
-    selector:
-        app: nginx

@@ -1,0 +1,18 @@
+kind:           Service
+apiVersion:     v1          
+
+metadata:
+    name:       nginx 
+    
+spec:
+    type: {{ .Values.service.type }} 
+    ports:
+        - port: {{ .Values.service.port }}
+          targetPort: 80
+          protocol: TCP
+          {{- if ( and ( eq .Values.service.type "NodePort" )
+          ( .Values.service.nodePort ) ) }}
+          nodePort: {{ .Values.service.nodePort }}
+          {{- end }}
+    selector:
+        app: nginx
